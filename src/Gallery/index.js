@@ -21,30 +21,29 @@ class Gallery extends React.Component{
     componentDidMount(){
       this.props.getimg()
     }
-    handleclick=(event)=>{
-        const storage = firebaseapp.storage();
 
-        const imageRef = storage.ref(`/images/${this.state.img.name}`).put(this.state.img);
-        imageRef.on('state_changed',(snapshot)=>{
-                console.log('niraj',snapshot)
-                storage.ref(`/images/${this.state.img.name}`).getDownloadURL().then((url)=>{  fetch('https://projectc-c6557-default-rtdb.firebaseio.com/images.json',{
-            method:'POST',
-            headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(url)
-        }).then((res)=>{return res.json()}).then(()=>this.props.getimg())})
-        
-        // fetch('https://projectc-c6557-default-rtdb.firebaseio.com/images.json',{
-        //     method:'POST',
-        //     headers: {
-        //       'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify(URL.createObjectURL(this.state.img))
-        // }).then((res)=>{return res.json()}).then((result)=>console.log('Niraj',result))
-        // console.log(typeof this.state.img,event.target.files[0])
-    })
-}
+handleclick=(event)=>{
+    const storage = firebaseapp.storage();
+ storage.ref(`/images/${this.state.img.name}`).put(this.state.img).then(
+   (snapshot)=>{
+            console.log('niraj',snapshot)
+            storage.ref(`/images/${this.state.img.name}`).getDownloadURL().then((url)=>{  fetch('https://projectc-c6557-default-rtdb.firebaseio.com/images.json',{
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(url)
+    }).then((res)=>{return res.json()}).then(()=>this.props.getimg())})})}
+//     fetch('https://projectc-c6557-default-rtdb.firebaseio.com/images.json',{
+//         method:'POST',
+//         headers: {
+//           'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(URL.createObjectURL(this.state.img))
+//     }).then((res)=>{return res.json()}).then((result)=>console.log('Niraj',result))
+//     console.log(typeof this.state.img,event.target.files[0])
+// })
+
     handledelete=(e,Index,img)=>{
         firebaseapp.database().ref().child(`images/${e}`).remove().then(()=>this.props.deleteitem(Index))
         firebaseapp.storage().ref(`images/${img}`).delete().then(()=>{console.log('delete sucesful')})
@@ -77,9 +76,9 @@ class Gallery extends React.Component{
 </div>
 </div>
     )
-}
-}
-const mapStateToProps=(store)=>{
+    }}
+
+ const mapStateToProps=(store)=>{
     return{
         Url:store.imgurl
     }
